@@ -16,8 +16,6 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-// #include <ros/ros.h>
-
 #include <string>
 #include <vector>
 #include <iostream>

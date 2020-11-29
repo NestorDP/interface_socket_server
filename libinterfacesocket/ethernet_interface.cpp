@@ -16,7 +16,7 @@ sock::EthernetInterface::~EthernetInterface (){
 }
 
 void sock::EthernetInterface::create_socket(std::string ip_server, int port, bool protocol){
-     this->prtlc = protocol;
+    this->prtlc = protocol;
 
     this->remote_addr.sin_family = AF_INET;
     this->remote_addr.sin_port = htons(port);
