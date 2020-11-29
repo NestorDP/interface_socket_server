@@ -6,7 +6,7 @@ set(CMAKE_BUILD_TYPE Debug)
 
 include_directories(
   include
-  ${catkin_INCLUDE_DIRS}
+  libinterfacesocket
 )
 
 

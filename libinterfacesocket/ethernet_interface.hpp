@@ -36,13 +36,16 @@ class EthernetInterface{
     EthernetInterface();
     ~EthernetInterface();
     void create_socket(std::string ip_server, int port, bool protocol);
+    void create_socket(int port, bool protocol);
     int net_send(uint8_t *msg, unsigned int len_buffer, int unsigned len_msg);
     int net_recv(uint8_t *msg, unsigned int len_buffer, int unsigned len_msg);
 
   private:
-    struct sockaddr_in server;
+    struct sockaddr_in remote_addr;
+    struct sockaddr_in local_addr;
     int port;
-    int sockfd; 
+    int localfd = 1;
+    int remotefd = 1; 
     bool prtlc;     
 };
 }
