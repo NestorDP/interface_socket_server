@@ -8,6 +8,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <netdb.h>
 
 
@@ -16,24 +17,27 @@
 
 
 /* Buffer length */
-#define BUFFER_LEN 1024
+#define BUFFER_LEN 512
 #define MSG_LEN 2764800
 
 /*
  * Main execution of the server program of the simple protocol
  */
-int main(void) {
+int main(int argc, char *argv[]) {
 
     struct sockaddr_in client, server;
-    int serverfd, clientfd;
+    int serverfd;
+    int clientfd;
     char buffer_out[BUFFER_LEN];
 
     char buffer_in[MSG_LEN];
-    unsigned int n_bytes = 0, n_bytes_acc = 0;
+    unsigned int n_bytes = 0;
+    unsigned int n_bytes_acc = 0;
 
     fprintf(stdout, "Starting server\n");
 
     serverfd = socket(AF_INET,  SOCK_STREAM, 0);
+    // serverfd = socket(AF_INET,  SOCK_DGRAM, 0);
     if(serverfd == -1) {
         perror("Can't create the server socket:");
         return EXIT_FAILURE;
@@ -43,6 +47,7 @@ int main(void) {
 
     server.sin_family = AF_INET;
     server.sin_port = htons(PORT);
+    server.sin_addr.s_addr = htonl(INADDR_ANY);
     memset(server.sin_zero, 0x0, 8);
 
     int yes = 1;
@@ -69,24 +74,32 @@ int main(void) {
         perror("Accept error:");
         return EXIT_FAILURE;
     }
+    unsigned int len = sizeof(client);
 
     strcpy(buffer_out, "\e[1;37mServer running!\e[0m\n\0");
+
+    // recvfrom(serverfd, buffer_in, BUFFER_LEN, 0,(struct sockaddr *) &client, &len);
+    // printf("\n %s", buffer_in);
 
     if (send(clientfd, buffer_out, BUFFER_LEN, 0)) {
         fprintf(stdout, "Client connected.\nWaiting for client message ...\n");
         while (1){ 
             for(int i = 0; i < MSG_LEN; i = i + BUFFER_LEN){
-                n_bytes_acc = n_bytes_acc + recv(clientfd, buffer_in + i, BUFFER_LEN, 0);            
+                n_bytes_acc = n_bytes_acc + recv(clientfd, buffer_in + i, BUFFER_LEN, 0);
+                // n_bytes_acc = n_bytes_acc + recvfrom(serverfd, buffer_in + i, BUFFER_LEN, 0,
+                //                                 (struct sockaddr *) &client, &len);            
             }
 
             for(int i = 0; i < MSG_LEN; i = i + BUFFER_LEN){
-                n_bytes_acc = n_bytes_acc + send(clientfd, buffer_in + i, BUFFER_LEN, 0);             
+                n_bytes_acc = n_bytes_acc + send(clientfd, buffer_in + i, BUFFER_LEN, 0);
+                // sendto(serverfd, buffer_in + i , BUFFER_LEN, 0, 
+                //     (const struct sockaddr *) &client, sizeof(client));          
             }
         }
     }
 
     /* Client connection Close */
-    close(clientfd);
+    // close(clientfd);
 
     /* Close the local socket */
     close(serverfd);
