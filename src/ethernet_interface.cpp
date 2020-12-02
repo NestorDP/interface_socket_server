@@ -3,7 +3,7 @@
  */
 
 
-#include "ethernet_interface.hpp" 
+#include "interface_socket_server/ethernet_interface.hpp" 
 
 sock::EthernetInterface::EthernetInterface () {
     fprintf(stdout, "Starting socket ...\n");

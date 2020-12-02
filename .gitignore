@@ -99,4 +99,7 @@ _deps
 !.vscode/extensions.json
 *.code-workspace
 
+bin/
+build/
+
 # End of https://www.toptal.com/developers/gitignore/api/cmake,c++,vscode,c

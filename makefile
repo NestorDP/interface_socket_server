@@ -1,16 +1,25 @@
-TARGET = server
 
-CFLAGS = -static -g -Wall -std=gnu99
-LDFLAGS = -g -Wall
-CC = gcc
+CC = g++
 ARCH = arm
+CFLAGS = -g -Wall -std=gnu++11
+LDFLAGS = -g -Wall
 
-build: $(TARGET)
-$(TARGET): $(TARGET).o
+BINDIR = bin
+BUILDDIR = build
+SRCDIR = src
+SOURCES = $(shell find $(SRCDIR) -type f -name *.cpp)
+OBJECTS	= $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.cpp=.o))
+INC = -I include
+
+TARGET = $(BINDIR)/server
+
+$(TARGET): $(OBJECTS)
+	@mkdir -p $(BINDIR)
 	$(CC) $(LDFLAGS) $^ -o $@
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
+	@mkdir -p $(BUILDDIR)
+	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
 .PHONY: clean
 clean:
