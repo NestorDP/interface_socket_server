@@ -1,4 +1,5 @@
 
+PROJECT = server
 CC = g++
 ARCH = arm
 CFLAGS = -g -Wall -std=gnu++11
@@ -6,21 +7,23 @@ LDFLAGS = -g -Wall
 
 BINDIR = bin
 BUILDDIR = build
-SRCDIR = src
-SOURCES = $(shell find $(SRCDIR) -type f -name *.cpp)
-OBJECTS	= $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.cpp=.o))
-INC = -I include
+INCLUDEDIR = include
+SOURCEDIR = src
 
-TARGET = $(BINDIR)/server
+SOURCES = $(shell find $(SOURCEDIR) -type f -name *.cpp)
+OBJECTS	= $(patsubst $(SOURCEDIR)/%,$(BUILDDIR)/%,$(SOURCES:.cpp=.o))
+INCLUDES = -I $(INCLUDEDIR)
+
+TARGET = $(BINDIR)/$(PROJECT)
 
 $(TARGET): $(OBJECTS)
 	@mkdir -p $(BINDIR)
 	$(CC) $(LDFLAGS) $^ -o $@
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
+$(BUILDDIR)/%.o: $(SOURCEDIR)/%.cpp
 	@mkdir -p $(BUILDDIR)
-	$(CC) $(CFLAGS) $(INC) -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 .PHONY: clean
 clean:
-	rm -f $(TARGET) *.a *.o *.~
+	rm -f $(TARGET) *.a $(BUILDDIR)/*.o *.~
