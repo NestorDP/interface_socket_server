@@ -126,12 +126,12 @@ int sock::EthernetInterface::net_recv(uint8_t *msg, unsigned int len_buffer, int
     unsigned int len;
 
     if (this->prtlc) {
-        for(int i = 0; i < len_msg; i = i + len_buffer) {
+        for(size_t i = 0; i < len_msg; i = i + len_buffer) {
             num = num + recv(this->remotefd, msg + i, len_buffer, MSG_WAITALL);
         }
     }
     else {
-        for(int i = 0; i < len_msg; i = i + len_buffer) {
+        for(size_t i = 0; i < len_msg; i = i + len_buffer) {
             num = num + recvfrom(remotefd, msg + i, len_buffer, 0,
             (struct sockaddr *) &this->remote_addr, &len);
         }
