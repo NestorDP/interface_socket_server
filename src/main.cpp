@@ -20,9 +20,9 @@
 #define PORT 4242
 #define MSG_LEN 2764800
 
-// The start address and length of the Lightweight bridge
-#define HPS_TO_FPGA_LW_BASE 0xFF200000
-#define HPS_TO_FPGA_LW_SPAN 0x0020000
+// The start address and length of the HPS-to-FPGA bridge
+#define HPS_TO_FPGA_AXI_BASE 0xC0000000
+#define HPS_TO_FPGA_AXI_SPAN 0x3C000000
 
 /*
  * Main execution of the server program of the simple protocol
@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
     uint32_t * dobro_map = 0;
     int devmem_fd = 0;
 
-    // int valor = 0;
+    int valor = 0;
     // char valor_r[10];
 
     // Open up the /dev/mem device (aka, RAM)
@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
     }
 
     // mmap() the entire address space of the Lightweight bridge so we can access our custom module 
-    lw_bridge_map = (uint32_t*)mmap( NULL, HPS_TO_FPGA_LW_SPAN, PROT_READ|PROT_WRITE, MAP_SHARED, devmem_fd, HPS_TO_FPGA_LW_BASE ); 
+    lw_bridge_map = (uint32_t*)mmap( NULL, HPS_TO_FPGA_AXI_SPAN, PROT_READ|PROT_WRITE, MAP_SHARED, devmem_fd, HPS_TO_FPGA_AXI_BASE ); 
     if(lw_bridge_map == MAP_FAILED) {
         perror("devmem mmap");
         close(devmem_fd);
@@ -58,6 +58,11 @@ int main(int argc, char *argv[]) {
     // Set the dobro_map to the correct offset within the RAM
     dobro_map = (uint32_t*)(lw_bridge_map + DOBRO_0_BASE);
 
+    *dobro_map = 56;
+    valor = *dobro_map;
+
+    printf("\n%d\n\n", valor);
+    
     soc.create_socket(PORT, TCP); 
     fprintf(stdout, "Server run!\n");
     strcpy(buffer_out, "\e[1;37mServer running!\e[0m\n\0");
