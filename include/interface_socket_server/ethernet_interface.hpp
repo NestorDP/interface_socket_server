@@ -2,8 +2,8 @@
  * @ Copyright 2020
  */
 
-#ifndef ETHERNET_INTERFACE_HPP
-#define ETHERNET_INTERFACE_HPP
+#ifndef INCLUDE_INTERFACE_SOCKET_SERVER_ETHERNET_INTERFACE_HPP_
+#define INCLUDE_INTERFACE_SOCKET_SERVER_ETHERNET_INTERFACE_HPP_
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,7 +30,7 @@
 namespace sock {
 
 class EthernetInterface{
-  public:
+ public:
     EthernetInterface();
     ~EthernetInterface();
     void create_socket(std::string ip_server, int port, bool protocol);
@@ -38,14 +38,14 @@ class EthernetInterface{
     int net_send(uint8_t *msg, unsigned int len_buffer, int unsigned len_msg);
     int net_recv(uint8_t *msg, unsigned int len_buffer, int unsigned len_msg);
 
-  private:
+ private:
     struct sockaddr_in remote_addr;
     struct sockaddr_in local_addr;
     int port;
     int localfd = 1;
-    int remotefd = 1; 
-    bool prtlc;     
+    int remotefd = 1;
+    bool prtlc;
 };
-}
+}  // namespace sock
 
-#endif // ETHERNET_INTERFACE_HPP
+#endif  // INCLUDE_INTERFACE_SOCKET_SERVER_ETHERNET_INTERFACE_HPP_
