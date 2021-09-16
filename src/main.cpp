@@ -11,8 +11,8 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 
-#include "interface_socket_server/ethernet_interface.hpp"
-#include "hps_0.h"
+#include <interfacesocket.hpp>
+// #include "interface_socket_server/hps_0.h"
 
 #define PORT 4242
 #define MSG_LEN 2764800
